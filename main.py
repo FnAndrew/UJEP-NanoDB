@@ -84,6 +84,9 @@ def main() -> None:
     for row in joined:
         print(row)
 
+    ac = customer.where(lambda row: row["name"].startswith("A"))
+    print(ac.to_text())
+
 
 if __name__ == "__main__":
     main()

@@ -3,6 +3,7 @@ from decimal import Decimal
 from enum import Enum
 from collections.abc import Collection, Sequence
 from typing import TypeAlias, Iterator, Callable, Mapping
+from zoneinfo import reset_tzpath
 
 Value: TypeAlias = None | int | Decimal | str | date
 Row: TypeAlias = tuple[Value, ...]
@@ -373,7 +374,8 @@ class Table:
         return lookup
 
     def _row_to_mapping(self, row: Row) -> Mapping[str, Value]:
-        """Convert one row tuple to a dictionary keyed by column names."""
+        """Convert one row tuple to a dictionary keyed by column names.
+        protected method (used in derived classes)"""
         return {
             column.name: value
             for column, value in zip(self._columns, row)
@@ -416,3 +418,10 @@ class Table:
             The target table extended by projected rows.
         """
         ...
+
+    def get_column(self, column_name: str) -> Sequence[Value]:
+        result = []
+        index = self._column_index[column_name]
+        for row in self._rows:
+            result.append(row[index])
+        return result
