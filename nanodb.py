@@ -21,12 +21,17 @@ def row_to_texts(row: Row) -> list[str]:
 
 
 def compute_column_widths(headers: Sequence[str], rows: Sequence[Sequence[str]]) -> list[int]:
-    """Compute display widths for all columns."""
-    widths = [len(header) for header in headers]
+    """Compute display widths for all columns.
+    - headers: seznam názvů sloupečků
+        - Sequence je obecný pojem pro libovolnou posloupnost, může být list, tuple, atd.
+    - rows: seznam řádků, každý řádek je seznam textových hodnot
+    - vrací seznam šířek pro každý sloupec
+    """
+    widths = [len(header) for header in headers] # výchozí šířka je délka názvu sloupce
 
     for row in rows:
-        for i, value in enumerate(row):
-            widths[i] = max(widths[i], len(value))
+        for i, value in enumerate(row): # pro každý sloupec v řádku
+            widths[i] = max(widths[i], len(value)) # vrátí šířku o len(header) nebo len(value), podle toho, která je větší
 
     return widths
 
@@ -43,7 +48,9 @@ def make_data_line(values: Sequence[str], widths: Sequence[int]) -> str:
     return "|" + "|".join(cells) + "|"
 
 class DataType(Enum):
-    """Supported database data domains."""
+    """Supported database data domains.
+    
+    Python implementace Enum"""
     INT = 0
     DECIMAL = 1
     TEXT = 2
@@ -51,7 +58,9 @@ class DataType(Enum):
 
 
 class ColumnType:
-    """Description of a database column type."""
+    """Description of a database column type.
+    
+    Jen přijme data_type a další vlastnosti, které se uloží do atributů instance."""
 
     def __init__(
         self,

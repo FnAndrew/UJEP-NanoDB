@@ -16,6 +16,10 @@ def main() -> None:
         primary_key=("id",),
     )
 
+    # Vytvoření nové tabulky pomocí konstruktoru Table z nanodb
+    # název je "order", a přebírá seznam sloupečků třídy Column
+    # každý sloupeček má název, typ a případně další vlastnosti (not_null, unique)
+    # tabulce se definuje primární klíč pomocí parametru primary_key, který je n-ticí názvů sloupečků tvořících primární klíč
     order_tbl = Table(
         "order",
         [
@@ -27,13 +31,16 @@ def main() -> None:
         primary_key=("id",),
     )
 
+    # vložení dat do tabulky customer
+    # metoda insert přijímá n-tici s názvy sloupečků a s hodnotami pro ně
+    # hodnoty musí být ve správném formátu a pořadí
     customer.insert(
         ("id", "name", "birth_date"),
         (1, "Alice", date(1995, 5, 17)),
     )
     customer.insert(
         ("id", "name", "birth_date"),
-        (2, "Bob", None),
+        (2, "Bob", None), # None lze použít pouze u sloupečků, kde není nastaveno not_null=True
     )
     customer.insert(
         ("id", "name", "birth_date"),
