@@ -2,6 +2,7 @@ from datetime import date
 from decimal import Decimal
 
 from nanodb import Column, ColumnType, DataType, Table
+from simple_table import SimpleTable
 
 
 def main() -> None:
@@ -94,6 +95,49 @@ def main() -> None:
     ac = customer.where(lambda row: row["name"].startswith("A"))
     print(ac.to_text())
 
+def main_store():
+    """Demostrace užití NanoDB pro obchod"""
+
+    class Store():
+        def __init__(self, name: str):
+            self._name = name
+
+            self.customers = SimpleTable("customers", ["name", "email"])
+            self.orders = SimpleTable("orders", ["customer_id", "value"])
+        
+        def add_customer(self, name: str, email: str) -> bool:
+            return self.customers.add_row(name, email)
+        
+        def get_customer_id(self, email: str):
+            rows = list(self.customers.iter_rows_as_dict())
+            my_customer = [c for c in rows if c.get("email") == email][0]
+            return my_customer.get("_id")
+
+            # cw = self.customers.where(lambda row: row["email"] == email)
+
+        def add_order(self, customer_email: str, value: str) -> bool:
+            c_id = self.get_customer_id(customer_email)
+            return self.orders.add_row(str(c_id), value)
+        
+        def print_customer_orders(self, email: str):
+            joined = self.customers.inner_join(self.orders, ["customer_id"])
+            joined.where(lambda row: row["email"] == email)
+            print(joined)
+
+        def print(self):
+            print(self.customers.to_text())
+            print(self.orders.to_text())
+
+    my_store = Store("U Vočka")
+    my_store.add_customer("Bart", "bart@simpson.bbc")
+    my_store.add_customer("Lísa", "lisa@simpson.bbc")
+    # my_store.get_customer_id("bart@simpson.bbc")
+    my_store.add_order("bart@simpson.bbc", '15.5')
+    
+    # my_store.print()
+    my_store.print_customer_orders("bart@simpson.bbc")
+
+
 
 if __name__ == "__main__":
-    main()
+    main_store()
