@@ -80,6 +80,7 @@ class Column:
         self.name = name
         self.column_type = column_type
 
+# Informace o tom, jaký opravdový datový typ má DataType
 TYPE_INFO: dict[DataType, type] = {
         DataType.INT: int,
         DataType.DECIMAL: Decimal,
@@ -90,6 +91,7 @@ TYPE_INFO: dict[DataType, type] = {
 
 def has_duplicates(items: Collection[str]) -> bool:
     """Return True if the collection contains duplicate values."""
+    # Porovná originální délku kolekce a potom délku kolekce s unikátními prvky pomocí set()
     return len(items) != len(set(items))
 
 
@@ -133,6 +135,7 @@ class Table:
             raise ValueError("Primary key columns must be unique.")
 
         for col_name in primary_key:
+            # kontrola, že PK se aplikuje na existující tabulky
             if col_name not in self._column_map:
                 raise ValueError(f"Unknown primary key column {col_name!r}.")
 
@@ -155,6 +158,7 @@ class Table:
                     raise ValueError(
                         f"Primary key column {col_name!r} must be NOT NULL."
                     )
+                    # f"text{promenna!r}" <- !r zavolá __repr__  při vypsání
 
     @property
     def columns(self) -> Sequence[Column]:
