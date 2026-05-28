@@ -1,13 +1,16 @@
 from datetime import date
 from decimal import Decimal
+from mixins import SequenceToStringMixin
 
 from nanodb import Column, ColumnType, DataType, Table
 from simple_table import SimpleTable
 
+class TableWithRepr(Table, SequenceToStringMixin):
+    pass
 
 def main() -> None:
     """Create sample tables, insert data, and demonstrate inner join."""
-    customer = Table(
+    customer = TableWithRepr(
         "customer",
         [
             Column("id", ColumnType(DataType.INT, not_null=True, unique=True)),
