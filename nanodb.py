@@ -402,10 +402,23 @@ class Table(Sequence):
 
     def where(self, predicate: Callable[[Mapping[str, Value]], bool]) -> 'Table':
         """Return a new table containing only rows satisfying the predicate."""
-        result = Table(self.name, self._columns, self._primary_key)
+        # Místo Table(...) použijeme self.__class__(...)
+        result = self.__class__(self.name, self._columns, self._primary_key)
 
         for row in self._rows:
             if predicate(self._row_to_mapping(row)):
+                result._rows.append(row)
+
+        return result
+    
+    def delete_where(self, predicate: Callable[[Mapping[str, Value]], bool]) -> 'Table':
+        """Return a new table with rows according to the predicate"""
+
+        # vytvoření nové instance třídy (tabulky)
+        result = self.__class__(self.name, self._columns, self._primary_key)
+
+        for row in self._rows:
+            if not predicate(self._row_to_mapping(row)):
                 result._rows.append(row)
 
         return result

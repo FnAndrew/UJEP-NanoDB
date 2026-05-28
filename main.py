@@ -140,7 +140,32 @@ def main_store():
     # my_store.print()
     my_store.print_customer_orders("bart@simpson.bbc")
 
+def main_delete_where():
+    zvirata = Table(
+        "zviratka",
+        [
+        Column("id", ColumnType(DataType.INT, not_null=True, unique=True)),
+        Column("nazev", ColumnType(DataType.TEXT)),
+        Column("oblast", ColumnType(DataType.TEXT)),
+        Column("pocet", ColumnType(DataType.INT))
+        ],
+        primary_key=("id",)
+    )
 
+    zvirata.insert(("id", "nazev", "oblast", "pocet"), (1, "papoušek", "Afrika", 2))
+    zvirata.insert(("id", "nazev", "oblast", "pocet"), (2, "pes", "domov", 15))
+    zvirata.insert(("id", "nazev", "oblast", "pocet"), (3, "tuleň", "moře", 3))
+    zvirata.insert(("id", "nazev", "oblast", "pocet"), (4, "delfín", "moře", 6))
+    zvirata.insert(("id", "nazev", "oblast", "pocet"), (5, "kůň", "Evropa", 20))
+
+    print("---Zvířátka---")
+    print(zvirata.to_text())
+
+    suchozemci = zvirata.delete_where(lambda row: row["oblast"]=="moře")
+    
+    print("---Suchozemci---")
+    print(suchozemci.to_text())
 
 if __name__ == "__main__":
-    main_store()
+    # main_store()
+    main_delete_where()
