@@ -423,6 +423,27 @@ class Table(Sequence):
 
         return result
 
+    def order_by(self, column_name: str, descending: bool = False) -> 'Table':
+        # kontrola existence vybraného sloupce
+        if column_name not in self._column_map:
+            raise ValueError(f"Neplatný sloupek {column_name}")
+        
+        # zjištění indexu sloupce pro budoucí filtraci
+        col_index = self._column_index[column_name]
+
+        # vytvoření kopie tabulky
+        result = self.__class__(self.name, self._columns, self._primary_key)
+
+        sorted_rows = sorted(
+            self._rows,
+            key=lambda row: row[col_index],
+            reverse=descending
+        )
+
+        result._rows = sorted_rows
+        return result
+
+
     def select_to(
             self,
             transform: Callable[[Mapping[str, Value]], Mapping[str, Value]],

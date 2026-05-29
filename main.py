@@ -166,6 +166,18 @@ def main_delete_where():
     print("---Suchozemci---")
     print(suchozemci.to_text())
 
+    
+    # --- Seřazení dle sloupce
+    zvirata_asc = zvirata.order_by("pocet")
+    zvirata_desc = zvirata.order_by("pocet", descending=True)
+    
+    print("---Zvířata ASC---")
+    print(zvirata_asc.to_text())
+
+    print("---Zvířata DESC---")
+    print(zvirata_desc.to_text())
+    
+
 if __name__ == "__main__":
     # main_store()
     main_delete_where()
